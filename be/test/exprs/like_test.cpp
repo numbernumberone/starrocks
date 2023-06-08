@@ -593,7 +593,6 @@ TEST_F(LikeTest, constValueRegexp) {
                         .ok());
 }
 
-
 TEST_F(LikeTest, constValueCaseInsensitiveRegexp) {
     auto context = FunctionContext::create_test_context();
     std::unique_ptr<FunctionContext> ctx(context);

@@ -223,9 +223,7 @@ private:
             _search_string_column = ColumnHelper::create_const_column<TYPE_VARCHAR>(search_string_sv, 1);
         }
 
-        void set_ignore_case(const bool ignore_case_arg) {
-            ignore_case = ignore_case_arg;
-        }
+        void set_ignore_case(const bool ignore_case_arg) { ignore_case = ignore_case_arg; }
     };
 };
 } // namespace starrocks

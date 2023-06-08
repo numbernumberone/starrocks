@@ -81,7 +81,7 @@ public class FunctionAnalyzer {
                 }
             }
         }
-        
+
         if (fnName.getFunction().equals(FunctionSet.REGEXP)) {
             if (functionCallExpr.getChildren().size() > 2) {
                 if (!(functionCallExpr.getChild(2) instanceof StringLiteral)) {
@@ -95,7 +95,7 @@ public class FunctionAnalyzer {
                 }
             }
         }
-        
+
         if (fnName.getFunction().equals(FunctionSet.ARRAY_MAP)) {
             Preconditions.checkState(functionCallExpr.getChildren().size() > 1,
                     "array_map should have at least two inputs", functionCallExpr.getPos());
@@ -167,7 +167,8 @@ public class FunctionAnalyzer {
         if (fnName.getFunction().equals(FunctionSet.LAG)
                 || fnName.getFunction().equals(FunctionSet.LEAD)) {
             if (!functionCallExpr.isAnalyticFnCall()) {
-                throw new SemanticException(fnName.getFunction() + " only used in analytic function", functionCallExpr.getPos());
+                throw new SemanticException(fnName.getFunction() + " only used in analytic function",
+                        functionCallExpr.getPos());
             } else {
                 if (functionCallExpr.getChildren().size() > 2) {
                     if (!functionCallExpr.getChild(2).isConstant()) {
@@ -182,7 +183,8 @@ public class FunctionAnalyzer {
 
         if (FunctionSet.onlyAnalyticUsedFunctions.contains(fnName.getFunction())) {
             if (!functionCallExpr.isAnalyticFnCall()) {
-                throw new SemanticException(fnName.getFunction() + " only used in analytic function", functionCallExpr.getPos());
+                throw new SemanticException(fnName.getFunction() + " only used in analytic function",
+                        functionCallExpr.getPos());
             }
         }
 

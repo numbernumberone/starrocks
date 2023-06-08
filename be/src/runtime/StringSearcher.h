@@ -247,7 +247,8 @@ struct LibcASCIICaseSensitiveStringSearcher {
     bool ignore_case;
 
     template <typename CharT, typename = std::enable_if_t<sizeof(CharT) == 1>>
-    LibcASCIICaseSensitiveStringSearcher(const CharT* const needle_, const size_t needle_size_, bool ignore_case_ = false)
+    LibcASCIICaseSensitiveStringSearcher(const CharT* const needle_, const size_t needle_size_,
+                                         bool ignore_case_ = false)
             : needle(reinterpret_cast<const char*>(needle_)), needle_size(needle_size_), ignore_case(ignore_case_) {}
 
     template <typename CharT, typename = std::enable_if_t<sizeof(CharT) == 1>>
@@ -257,11 +258,11 @@ struct LibcASCIICaseSensitiveStringSearcher {
             std::transform(lowercaseNeedle.begin(), lowercaseNeedle.end(), lowercaseNeedle.begin(), ::tolower);
             std::string lowercaseHaystack(haystack, haystack + haystack_len);
             std::transform(lowercaseHaystack.begin(), lowercaseHaystack.end(), lowercaseHaystack.begin(), ::tolower);
-            return reinterpret_cast<const CharT*>(memmem(lowercaseHaystack.data(), lowercaseHaystack.size(), lowercaseNeedle.data(), lowercaseNeedle.size()));
+            return reinterpret_cast<const CharT*>(memmem(lowercaseHaystack.data(), lowercaseHaystack.size(),
+                                                         lowercaseNeedle.data(), lowercaseNeedle.size()));
         } else {
             return reinterpret_cast<const CharT*>(memmem(haystack, haystack_len, needle, needle_size));
         }
-
     }
 };
 

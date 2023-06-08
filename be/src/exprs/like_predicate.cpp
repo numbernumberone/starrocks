@@ -45,13 +45,12 @@ static const char* PROMPT_INFO = " so we switch to use re2.";
 
 bool LikePredicate::hs_compile_and_alloc_scratch(const std::string& pattern, LikePredicateState* state,
                                                  FunctionContext* context, const Slice& slice) {
-
     int flags = HS_FLAG_ALLOWEMPTY | HS_FLAG_DOTALL | HS_FLAG_UTF8 | HS_FLAG_SINGLEMATCH;
     if (state->ignore_case) {
         flags |= HS_FLAG_CASELESS;
     }
-    if (hs_compile(pattern.c_str(), flags,
-                   HS_MODE_BLOCK, nullptr, &state->database, &state->compile_err) != HS_SUCCESS) {
+    if (hs_compile(pattern.c_str(), flags, HS_MODE_BLOCK, nullptr, &state->database, &state->compile_err) !=
+        HS_SUCCESS) {
         std::stringstream error;
         error << "Invalid hyperscan expression: " << std::string(slice.data, slice.size) << ": "
               << state->compile_err->message << PROMPT_INFO;
@@ -198,7 +197,7 @@ Status LikePredicate::regex_prepare(FunctionContext* context, FunctionContext::F
         auto ignore_case = ignore_case_slice.to_string();
         if (ignore_case == "i") {
             state->set_ignore_case(true);
-        } else if (ignore_case == "c"){
+        } else if (ignore_case == "c") {
             state->set_ignore_case(false);
         }
     }
@@ -314,12 +313,12 @@ StatusOr<ColumnPtr> LikePredicate::constant_ends_with_fn(FunctionContext* contex
     const auto& value = VECTORIZED_FN_ARGS(0);
     auto pattern = state->_search_string_column;
 
-    if (state -> ignore_case) {
-        return VectorizedStrictBinaryFunction<ConstantEndsIgnoreImpl>::evaluate<TYPE_VARCHAR, TYPE_BOOLEAN>(value, pattern);
+    if (state->ignore_case) {
+        return VectorizedStrictBinaryFunction<ConstantEndsIgnoreImpl>::evaluate<TYPE_VARCHAR, TYPE_BOOLEAN>(value,
+                                                                                                            pattern);
     } else {
         return VectorizedStrictBinaryFunction<ConstantEndsImpl>::evaluate<TYPE_VARCHAR, TYPE_BOOLEAN>(value, pattern);
     }
-
 }
 
 DEFINE_BINARY_FUNCTION_WITH_IMPL(ConstantStartsIgnoreImpl, value, pattern) {
@@ -340,8 +339,9 @@ StatusOr<ColumnPtr> LikePredicate::constant_starts_with_fn(FunctionContext* cont
     const auto& value = VECTORIZED_FN_ARGS(0);
     auto pattern = state->_search_string_column;
 
-    if (state -> ignore_case) {
-        return VectorizedStrictBinaryFunction<ConstantStartsIgnoreImpl>::evaluate<TYPE_VARCHAR, TYPE_BOOLEAN>(value, pattern);
+    if (state->ignore_case) {
+        return VectorizedStrictBinaryFunction<ConstantStartsIgnoreImpl>::evaluate<TYPE_VARCHAR, TYPE_BOOLEAN>(value,
+                                                                                                              pattern);
     } else {
         return VectorizedStrictBinaryFunction<ConstantStartsImpl>::evaluate<TYPE_VARCHAR, TYPE_BOOLEAN>(value, pattern);
     }
@@ -365,12 +365,12 @@ StatusOr<ColumnPtr> LikePredicate::constant_equals_fn(FunctionContext* context, 
     const auto& value = VECTORIZED_FN_ARGS(0);
     auto pattern = state->_search_string_column;
 
-    if (state -> ignore_case) {
-        return VectorizedStrictBinaryFunction<ConstantEqualsIgnoreImpl>::evaluate<TYPE_VARCHAR, TYPE_BOOLEAN>(value, pattern);
+    if (state->ignore_case) {
+        return VectorizedStrictBinaryFunction<ConstantEqualsIgnoreImpl>::evaluate<TYPE_VARCHAR, TYPE_BOOLEAN>(value,
+                                                                                                              pattern);
     } else {
         return VectorizedStrictBinaryFunction<ConstantEqualsImpl>::evaluate<TYPE_VARCHAR, TYPE_BOOLEAN>(value, pattern);
     }
-
 }
 
 StatusOr<ColumnPtr> LikePredicate::constant_substring_fn(FunctionContext* context, const starrocks::Columns& columns) {
@@ -385,7 +385,7 @@ StatusOr<ColumnPtr> LikePredicate::constant_substring_fn(FunctionContext* contex
         /// It is assumed that the StringSearcher is not very difficult to initialize.
         const char* res_pointer = nullptr;
 
-        auto searcher = LibcASCIICaseSensitiveStringSearcher(needle.data, needle.size, state -> ignore_case);
+        auto searcher = LibcASCIICaseSensitiveStringSearcher(needle.data, needle.size, state->ignore_case);
         /// searcher returns a pointer to the found substring or to the end of `haystack`.
         res_pointer = searcher.search(haystack.data, haystack.size);
 
